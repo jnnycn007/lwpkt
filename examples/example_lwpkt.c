@@ -12,7 +12,7 @@ static const char* data = "Hello World\r\n";
 /**
  * \brief           LwPKT example code
  */
-void
+int
 example_lwpkt(void) {
     lwpktr_t res;
     uint8_t b;
@@ -117,4 +117,6 @@ example_lwpkt(void) {
     } else {
         printf("Packet is not valid!\r\n");
     }
+
+    return 0;
 }

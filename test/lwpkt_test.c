@@ -9,7 +9,7 @@ static uint8_t pkt_tx_rb_data[256], pkt_rx_rb_data[256];
 /* Data to read and write */
 static const char* data = "Hello World\r\n";
 
-static uint8_t
+static int
 run_test(uint8_t conf_index, uint8_t use_addr, uint8_t use_addr_ext, uint8_t use_flags, uint8_t use_cmd,
          uint8_t use_cmd_ext, uint8_t use_crc, uint8_t use_crc32) {
     lwpktr_t res;
@@ -24,6 +24,8 @@ run_test(uint8_t conf_index, uint8_t use_addr, uint8_t use_addr_ext, uint8_t use
     if (!use_addr_ext) {
         our_addr &= 0xFFUL;
         dest_addr &= 0xFFUL;
+    }
+    if (!use_cmd_ext) {
         cmd &= 0xFFUL;
     }
 
@@ -103,7 +105,8 @@ run_test(uint8_t conf_index, uint8_t use_addr, uint8_t use_addr_ext, uint8_t use
 #endif /* LWPKT_CFG_USE_FLAGS */
 #if LWPKT_CFG_USE_CMD
         } else if (use_cmd && cmd != lwpkt_get_cmd(&pkt)) {
-            printf("command mismatch\r\n");
+            printf("command mismatch. cmd_exp: 0x%08X, cmd_act: 0x%08X\r\n", (unsigned)cmd,
+                   (unsigned)lwpkt_get_cmd(&pkt));
 #endif /* LWPKT_CFG_USE_CMD */
         } else if (data_len != lwpkt_get_data_len(&pkt)) {
             printf("data len mismatch\r\n");
@@ -119,22 +122,25 @@ run_test(uint8_t conf_index, uint8_t use_addr, uint8_t use_addr_ext, uint8_t use
             }
             if (ok) {
                 printf("Test OK\r\n");
+                return 0;
             }
         }
     } else if (res == lwpktINPROG) {
         printf("Packet is still in progress, did not receive yet all bytes..\r\n");
+        return -1;
     } else {
         printf("Packet is not valid!\r\n");
+        return -1;
     }
-    printf("--\r\n");
-    return 0;
+    return -1;
 }
 
 /**
  * \brief           LwPKT example code
  */
-void
+int
 test_lwpkt(void) {
+    int ret = 0;
     printf("---\r\nLwPKT test.\r\n\r\n");
 
     /* Setup the lib */
@@ -143,8 +149,13 @@ test_lwpkt(void) {
     lwpkt_init(&pkt, &pkt_tx_rb, &pkt_rx_rb);
 
     /* Try */
-    for (size_t i = 0; i < 1 << 7; ++i) {
-        run_test(i + 1, !!(i & 0x01), !!(i & 0x02), !!(i & 0x04), !!(i & 0x08), !!(i & 0x10), !!(i & 0x20),
-                 !!(i & 0x40));
+    for (uint32_t i = 0; i < 1 << 7; ++i) {
+        ret |= run_test(i + 1, !!(i & 0x01), !!(i & 0x02), !!(i & 0x04), !!(i & 0x08), !!(i & 0x10), !!(i & 0x20),
+                        !!(i & 0x40));
+        if (ret) {
+            return ret;
+        }
     }
+
+    return ret;
 }

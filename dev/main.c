@@ -6,13 +6,11 @@
 #include <string.h>
 #include "lwpkt/lwpkt.h"
 
-extern void example_lwpkt(void);
-extern void example_lwpkt_evt(void);
-extern void test_lwpkt(void);
+extern int example_lwpkt(void);
+extern int example_lwpkt_evt(void);
+extern int test_lwpkt(void);
 
 int
 main() {
-    test_lwpkt();
-    //  example_lwpkt_evt();
-    return 0;
+    return test_lwpkt();
 }
