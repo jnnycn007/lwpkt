@@ -12,6 +12,7 @@ static const char* data = "Hello World\r\n";
 static int
 run_test(uint8_t conf_index, uint8_t use_addr, uint8_t use_addr_ext, uint8_t use_flags, uint8_t use_cmd,
          uint8_t use_cmd_ext, uint8_t use_crc, uint8_t use_crc32) {
+            int retval = 0;
     lwpktr_t res;
     uint8_t b;
     uint32_t our_addr = 0x12345678UL;
@@ -122,17 +123,17 @@ run_test(uint8_t conf_index, uint8_t use_addr, uint8_t use_addr_ext, uint8_t use
             }
             if (ok) {
                 printf("Test OK\r\n");
-                return 0;
+                retval = 0;
             }
         }
     } else if (res == lwpktINPROG) {
         printf("Packet is still in progress, did not receive yet all bytes..\r\n");
-        return -1;
+        retval = -1;
     } else {
         printf("Packet is not valid!\r\n");
-        return -1;
+        retval = -1;
     }
-    return -1;
+    return retval;
 }
 
 /**
