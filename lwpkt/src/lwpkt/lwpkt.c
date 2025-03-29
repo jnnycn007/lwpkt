@@ -216,12 +216,17 @@ prv_crc_init(lwpkt_t* pkt, lwpkt_crc_t* crcobj) {
  * \brief           Write data to the output stream, with variable length array
  * 
  * \param           pkt: Packet object
- * \param           crc: CRC object
  * \param           var_num: Number to encode
+ * \param           crc: CRC object
  * \return          Number of bytes used to encode the number
  */
 static uint8_t
-write_bytes_var_encoded(lwpkt_t* pkt, lwpkt_crc_t* crc, uint32_t var_num) {
+write_bytes_var_encoded(lwpkt_t* pkt, uint32_t var_num
+#if LWPKT_CFG_USE_CRC
+                        ,
+                        lwpkt_crc_t* crc
+#endif /* LWPKT_CFG_USE_CRC */
+) {
     uint8_t cnt = 0;
     do {
         uint8_t byt = (var_num & LWPKT_7LSB_BITS_MASK) | (var_num > LWPKT_7LSB_BITS_MASK ? LWPKT_MSB_BIT : 0);
@@ -638,10 +643,12 @@ lwpkt_write(lwpkt_t* pkt,
         CALC_BYTES_NUM_FOR_LEN(min_mem, len);
         min_mem += len; /* Data length */
 
+#if LWPKT_CFG_USE_CRC
         /* CRC part */
         if (CHECK_FEATURE_CONFIG_MODE_ENABLED(pkt, LWPKT_CFG_USE_CRC, LWPKT_FLAG_USE_CRC)) {
             min_mem += CRC_DATA_LEN(pkt);
         }
+#endif /* LWPKT_CFG_USE_CRC */
 
         /* Verify enough memory */
         if (lwrb_get_free(pkt->tx_rb) < min_mem) {
@@ -666,8 +673,8 @@ lwpkt_write(lwpkt_t* pkt,
         if (0) {
 #if LWPKT_CFG_ADDR_EXTENDED
         } else if (CHECK_FEATURE_CONFIG_MODE_ENABLED(pkt, LWPKT_CFG_ADDR_EXTENDED, LWPKT_FLAG_ADDR_EXTENDED)) {
-            write_bytes_var_encoded(pkt, &crc, pkt->addr);
-            write_bytes_var_encoded(pkt, &crc, to);
+            write_bytes_var_encoded(pkt, pkt->addr, &crc);
+            write_bytes_var_encoded(pkt, to, &crc);
         } else {
 #endif /* !LWPKT_CFG_ADDR_EXTENDED */
             WRITE_WITH_CRC(pkt, &crc, pkt->tx_rb, &pkt->addr, 1);
@@ -679,7 +686,7 @@ lwpkt_write(lwpkt_t* pkt,
 #if LWPKT_CFG_USE_FLAGS
     /* Flags part */
     if (CHECK_FEATURE_CONFIG_MODE_ENABLED(pkt, LWPKT_CFG_USE_FLAGS, LWPKT_FLAG_USE_FLAGS)) {
-        write_bytes_var_encoded(pkt, &crc, flags);
+        write_bytes_var_encoded(pkt, flags, &crc);
     }
 #endif
 
@@ -687,7 +694,7 @@ lwpkt_write(lwpkt_t* pkt,
     /* CMD byte */
     if (CHECK_FEATURE_CONFIG_MODE_ENABLED(pkt, LWPKT_CFG_USE_CMD, LWPKT_FLAG_USE_CMD)) {
         if (CHECK_FEATURE_CONFIG_MODE_ENABLED(pkt, LWPKT_CFG_CMD_EXTENDED, LWPKT_FLAG_CMD_EXTENDED)) {
-            write_bytes_var_encoded(pkt, &crc, cmd);
+            write_bytes_var_encoded(pkt, cmd, &crc);
         } else {
             WRITE_WITH_CRC(pkt, &crc, pkt->tx_rb, &cmd, 1);
         }
@@ -695,7 +702,12 @@ lwpkt_write(lwpkt_t* pkt,
 #endif /* LWPKT_CFG_USE_CMD */
 
     /* Length bytes */
-    write_bytes_var_encoded(pkt, &crc, len);
+    write_bytes_var_encoded(pkt, len
+#if LWPKT_CFG_USE_CRC
+                            ,
+                            &crc
+#endif /* LWPKT_CFG_USE_CRC */
+    );
 
     /* Data bytes, but only if length more than 0 */
     if (org_len > 0) {

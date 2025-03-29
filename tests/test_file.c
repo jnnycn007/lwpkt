@@ -12,7 +12,7 @@ static const char* data = "Hello World\r\n";
 static int
 run_test(uint8_t conf_index, uint8_t use_addr, uint8_t use_addr_ext, uint8_t use_flags, uint8_t use_cmd,
          uint8_t use_cmd_ext, uint8_t use_crc, uint8_t use_crc32) {
-            int retval = 0;
+    int retval = 0;
     lwpktr_t res;
     uint8_t b;
     uint32_t our_addr = 0x12345678UL;
@@ -137,10 +137,10 @@ run_test(uint8_t conf_index, uint8_t use_addr, uint8_t use_addr_ext, uint8_t use
 }
 
 /**
- * \brief           LwPKT example code
+ * \brief           Main run
  */
 int
-test_lwpkt(void) {
+main(void) {
     int ret = 0;
     printf("---\r\nLwPKT test.\r\n\r\n");
 
@@ -157,6 +157,5 @@ test_lwpkt(void) {
             return ret;
         }
     }
-
     return ret;
 }
