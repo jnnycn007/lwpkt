@@ -1,3 +1,14 @@
+/**
+ * \file            test_file.c
+ * \author          Tilen MAJERLE <tilen@majerle.eu>
+ * \brief           
+ * \version         0.1
+ * \date            2025-03-30
+ * 
+ * @copyright Copyright (c) 2025
+ * 
+ * Single test file for all options
+ */
 #include <stdio.h>
 #include "lwpkt/lwpkt.h"
 
@@ -17,7 +28,9 @@ run_test(uint8_t conf_index, uint8_t use_addr, uint8_t use_addr_ext, uint8_t use
     uint8_t b;
     uint32_t our_addr = 0x12345678UL;
     uint32_t dest_addr = 0x87654321UL;
+#if LWPKT_CFG_USE_FLAGS
     uint32_t flags = 0xACCE550FUL;
+#endif /* LWPKT_CFG_USE_FLAGS */
     uint32_t cmd = 0x85542343UL;
     size_t data_len = strlen(data);
 

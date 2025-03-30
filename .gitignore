@@ -28,6 +28,7 @@
 RTE/
 
 *debug
+*__build__
 
 # IAR Settings
 **/settings/*.crun
