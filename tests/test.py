@@ -1,6 +1,6 @@
-import glob, os, shutil, sys
+import glob, os, shutil, sys, argparse
 
-def main():
+def main(args):
     retval:int = 0
 
     rootpath = os.getcwd()
@@ -28,5 +28,15 @@ def main():
 
     return retval
 
+# Get parser
+def get_parser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--github", required=False, action='store_true', help="Flag if test runs on Github workflow")
+    return parser
+
+# Run the script
 if __name__ == '__main__':
-    sys.exit(1 if main() != 0 else 0)
+    print('Main script running', flush=True)
+
+    parser = get_parser()
+    sys.exit(1 if main(parser.parse_args()) != 0 else 0)
