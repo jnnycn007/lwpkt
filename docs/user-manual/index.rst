@@ -39,7 +39,7 @@ Packet structure consists of several fields, where some are optional and some ar
 * ``STOP``: Byte with fixed value to represent stop of packet
 
 .. tip::
-    If only ``2`` devices are communicating and are in the network, considering disabling :c:macro:`LWPKT_CFG_USE_ADDR` to improve
+    If only ``2`` devices are communicating and are in the network, consider disabling :c:macro:`LWPKT_CFG_USE_ADDR` to improve
     data bandwidth and remove unnecessary packet overhead
 
 Data input output
