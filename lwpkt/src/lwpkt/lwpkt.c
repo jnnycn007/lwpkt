@@ -147,8 +147,8 @@ prv_pkt_set_state(lwpkt_t* pkt, lwpkt_state_t state) {
  */
 static void
 prv_pkt_reset(lwpkt_t* pkt) {
-    LWPKT_MEMSET(&(pkt)->m, 0x00, sizeof((pkt)->m));
-    (pkt)->m.state = LWPKT_STATE_START;
+    LWPKT_MEMSET(&pkt->m, 0x00, sizeof(pkt->m));
+    pkt->m.state = LWPKT_STATE_START;
 }
 
 #if LWPKT_CFG_USE_CRC
