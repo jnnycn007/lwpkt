@@ -108,9 +108,10 @@
 
 /* Checks if feature is enabled for specific pkt instance */
 #define CHECK_FEATURE_CONFIG_MODE_ENABLED(_pkt_, _feature_, _flag_)                                                    \
-    (0                                                    /* For alignment purpose only */                             \
-     || ((_feature_) == 1)                                /* 1 == feature is globally enabled */                       \
-     || ((_feature_) == 2 && ((_pkt_)->flags & (_flag_))) /* 2 == feature is dynamically enabled */                    \
+    (0                                   /* For alignment purpose only */                                              \
+     || ((_feature_) == LWPKT_ON_STATIC) /* LWPKT_ON_STATIC == feature is globally enabled */                          \
+     || ((_feature_) == LWPKT_ON_DYNAMIC                                                                               \
+         && ((_pkt_)->flags & (_flag_))) /* LWPKT_ON_DYNAMIC == feature is dynamically enabled */                      \
     )
 
 /**
@@ -787,7 +788,7 @@ lwpkt_set_evt_fn(lwpkt_t* pkt, lwpkt_evt_fn evt_fn) {
 
 #endif /* LWPKT_CFG_USE_EVT || __DOXYGEN__ */
 
-#if LWPKT_CFG_USE_CRC == 2 || __DOXYGEN__
+#if LWPKT_CFG_USE_CRC == LWPKT_ON_DYNAMIC || __DOXYGEN__
 
 /**
  * \brief           Set CRC mode enabled.
@@ -805,9 +806,9 @@ lwpkt_set_crc_enabled(lwpkt_t* pkt, uint8_t enable) {
     }
 }
 
-#endif /* LWPKT_CFG_USE_CRC == 2 || __DOXYGEN__ */
+#endif /* LWPKT_CFG_USE_CRC == LWPKT_ON_DYNAMIC || __DOXYGEN__ */
 
-#if LWPKT_CFG_CRC32 == 2 || __DOXYGEN__
+#if LWPKT_CFG_CRC32 == LWPKT_ON_DYNAMIC || __DOXYGEN__
 
 /**
  * \brief           Enable extended addressing in the packet
@@ -825,9 +826,9 @@ lwpkt_set_crc32_enabled(lwpkt_t* pkt, uint8_t enable) {
     }
 }
 
-#endif /* LWPKT_CFG_CRC32 == 2 || __DOXYGEN__ */
+#endif /* LWPKT_CFG_CRC32 == LWPKT_ON_DYNAMIC || __DOXYGEN__ */
 
-#if LWPKT_CFG_USE_ADDR == 2 || __DOXYGEN__
+#if LWPKT_CFG_USE_ADDR == LWPKT_ON_DYNAMIC || __DOXYGEN__
 
 /**
  * \brief           Enable addressing in the packet
@@ -845,9 +846,9 @@ lwpkt_set_addr_enabled(lwpkt_t* pkt, uint8_t enable) {
     }
 }
 
-#endif /* LWPKT_CFG_USE_ADDR == 2 || __DOXYGEN__ */
+#endif /* LWPKT_CFG_USE_ADDR == LWPKT_ON_DYNAMIC || __DOXYGEN__ */
 
-#if LWPKT_CFG_ADDR_EXTENDED == 2 || __DOXYGEN__
+#if LWPKT_CFG_ADDR_EXTENDED == LWPKT_ON_DYNAMIC || __DOXYGEN__
 
 /**
  * \brief           Enable extended addressing in the packet
@@ -865,9 +866,9 @@ lwpkt_set_addr_extended_enabled(lwpkt_t* pkt, uint8_t enable) {
     }
 }
 
-#endif /* LWPKT_CFG_ADDR_EXTENDED == 2 || __DOXYGEN__ */
+#endif /* LWPKT_CFG_ADDR_EXTENDED == LWPKT_ON_DYNAMIC || __DOXYGEN__ */
 
-#if LWPKT_CFG_USE_CMD == 2 || __DOXYGEN__
+#if LWPKT_CFG_USE_CMD == LWPKT_ON_DYNAMIC || __DOXYGEN__
 
 /**
  * \brief           Enable CMD mode in the packet
@@ -885,9 +886,9 @@ lwpkt_set_cmd_enabled(lwpkt_t* pkt, uint8_t enable) {
     }
 }
 
-#endif /* LWPKT_CFG_USE_CMD == 2 || __DOXYGEN__ */
+#endif /* LWPKT_CFG_USE_CMD == LWPKT_ON_DYNAMIC || __DOXYGEN__ */
 
-#if LWPKT_CFG_CMD_EXTENDED == 2 || __DOXYGEN__
+#if LWPKT_CFG_CMD_EXTENDED == LWPKT_ON_DYNAMIC || __DOXYGEN__
 
 /**
  * \brief           Enable extended addressing in the packet
@@ -905,9 +906,9 @@ lwpkt_set_cmd_extended_enabled(lwpkt_t* pkt, uint8_t enable) {
     }
 }
 
-#endif /* LWPKT_CFG_CMD_EXTENDED == 2 || __DOXYGEN__ */
+#endif /* LWPKT_CFG_CMD_EXTENDED == LWPKT_ON_DYNAMIC || __DOXYGEN__ */
 
-#if LWPKT_CFG_USE_FLAGS == 2 || __DOXYGEN__
+#if LWPKT_CFG_USE_FLAGS == LWPKT_ON_DYNAMIC || __DOXYGEN__
 
 /**
  * \brief           Enable FLAGS mode in the packet
@@ -925,4 +926,4 @@ lwpkt_set_flags_enabled(lwpkt_t* pkt, uint8_t enable) {
     }
 }
 
-#endif /* LWPKT_CFG_USE_FLAGS == 2 || __DOXYGEN__ */
+#endif /* LWPKT_CFG_USE_FLAGS == LWPKT_ON_DYNAMIC || __DOXYGEN__ */
