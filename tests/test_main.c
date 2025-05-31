@@ -35,7 +35,7 @@ run_test(uint8_t conf_index, uint8_t use_addr, uint8_t use_addr_ext, uint8_t use
     size_t data_len = strlen(data);
 
     /* Limit to low-nibble for non-extended addresses and command */
-    if (!use_addr_ext) {
+    if (!use_addr_ext || LWPKT_CFG_ADDR_EXTENDED == 0) {
         our_addr &= 0xFFUL;
         dest_addr &= 0xFFUL;
     }
@@ -109,7 +109,8 @@ run_test(uint8_t conf_index, uint8_t use_addr, uint8_t use_addr_ext, uint8_t use
         if (0) {
 #if LWPKT_CFG_USE_ADDR
         } else if (use_addr && our_addr != lwpkt_get_from_addr(&pkt)) {
-            printf("receive address mismatch\r\n");
+            printf("receive address mismatch, exp: %X, got: %X\r\n", (unsigned)our_addr,
+                   (unsigned)lwpkt_get_from_addr(&pkt));
         } else if (use_addr && dest_addr != lwpkt_get_to_addr(&pkt)) {
             printf("destination address mismatch\r\n");
 #endif /* LWPKT_CFG_USE_ADDR */
