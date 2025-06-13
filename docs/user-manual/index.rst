@@ -30,15 +30,13 @@ Packet structure consists of several fields, where some are optional and some ar
 
 * ``START``: Byte with fixed value to represent start of packet
 * ``FROM``: Byte(s) from where this packet is coming from. Optional field, can be disabled with :c:macro:`LWPKT_CFG_USE_ADDR`.
-        Field is by default a single byte.
-        When more than ``256`` devices are on the bus, field can be extended to the variable length encoding with :c:macro:`LWPKT_CFG_ADDR_EXTENDED`
+    * When more than ``256`` devices are on the bus, field can be extended to the variable length encoding with :c:macro:`LWPKT_CFG_ADDR_EXTENDED`
 * ``TO``: Byte(s) to where this packet is targeting. Optional field, can be disabled with :c:macro:`LWPKT_CFG_USE_ADDR`.
-        Field is by default a single byte.
-        When more than ``256`` devices are on the bus, field can be extended to the variable length encoding with :c:macro:`LWPKT_CFG_ADDR_EXTENDED`
+    * When more than ``256`` devices are on the bus, field can be extended to the variable length encoding with :c:macro:`LWPKT_CFG_ADDR_EXTENDED`
 * ``FLAGS``: Variable length (unsigned 32-bit max) field for optional user flags. Optional field, can be disabled with :c:macro:`LWPKT_CFG_USE_FLAGS`
 * ``CMD``: Byte with optional command field to better align with multiple packets. Optional field, can be disabled with :c:macro:`LWPKT_CFG_USE_CMD`.
-        Field us by default a single byte.
-        When more than ``256`` different commands are being used, field can be extended to the variable length encoding with :c:macro:`LWPKT_CFG_CMD_EXTENDED`
+    * Field us by default a single byte.
+    * When more than ``256`` different commands are being used, field can be extended to the variable length encoding with :c:macro:`LWPKT_CFG_CMD_EXTENDED`
 * ``LEN``: Length of *data* part field. This is variable multi-byte length to support data length ``>= 256`` bytes. Always present, even if *data length* is set to ``0`` 
 * ``DATA``: Optional data field. Number of bytes is as in ``LEN`` field. Not part of the packet when ``LEN`` field is set to ``0``
 * ``CRC``: 8-bit CRC of all enabled fields except *START* and *STOP* bytes. Optional field, can be disabled with :c:macro:`LWPKT_CFG_USE_CRC`
