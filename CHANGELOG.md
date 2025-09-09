@@ -2,6 +2,8 @@
 
 ## Develop
 
+- Fix the platformio library package description
+
 ## v1.4.1
 
 - Fix the parameter check for write operation
